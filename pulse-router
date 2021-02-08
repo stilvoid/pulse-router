@@ -1,0 +1,37 @@
+#!/bin/bash
+
+set -e
+
+while true; do
+    echo "Make your choice"
+    select choice in "Create a new sink" "Route audio" "Quit"; do
+        case $choice in
+            "Create a new sink")
+                read -p "Sink name? " name
+                pactl load-module module-null-sink sink_name="$name" sink_properties=device.description="$name"
+                break
+                ;;
+
+            "Route audio")
+                echo "Select an input:"
+                select source in $(pactl list short sources | awk '{print $2}'); do
+                    break
+                done
+                echo
+
+                echo "Select an output:"
+                select sink in $(pactl list short sinks | awk '{print $2}'); do
+                    break
+                done
+                echo
+
+                pactl load-module module-loopback source=$source sink=$sink
+
+                break
+                ;;
+            *)
+                exit
+                ;;
+        esac
+    done
+done
