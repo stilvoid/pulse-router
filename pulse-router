@@ -4,11 +4,30 @@ set -e
 
 while true; do
     echo "Make your choice"
-    select choice in "Create a new sink" "Route audio" "Quit"; do
+    select choice in "Create a new sink" "Route audio" "Delete a sink" "Quit"; do
         case $choice in
             "Create a new sink")
                 read -p "Sink name? " name
                 pactl load-module module-null-sink sink_name="$name" sink_properties=device.description="$name"
+                break
+                ;;
+
+            "Delete a sink")
+                declare -A sinks
+                while read line; do
+                    name=$(echo $line | awk '{print $3}' | cut -d= -f2)
+                    id=$(echo $line | awk '{print $1}')
+                    sinks["$name"]="$id"
+                done < <(pactl list short modules | grep module-null-sink)
+
+                echo "Select sink:"
+                select sink in ${!sinks[@]}; do
+                    break
+                done
+                echo
+
+                pactl unload-module ${sinks[$sink]}
+
                 break
                 ;;
 
