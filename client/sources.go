@@ -1,4 +1,4 @@
-package main
+package client
 
 import (
 	"fmt"
@@ -15,15 +15,15 @@ func (s Source) String() string {
 
 	out.WriteString(fmt.Sprintf("Name: %s\n", s.Name))
 	out.WriteString(fmt.Sprintf("Description: %s\n", s.Description))
-	out.WriteString(fmt.Sprintf("Module: %s\n", Client.Modules[int(s.ModuleIndex)].Name))
+	out.WriteString(fmt.Sprintf("Module: %s\n", Modules[int(s.ModuleIndex)].Name))
 	out.WriteString(fmt.Sprintf("Channels: %s\n", fmt.Sprintf("%#v", s.ChannelMap)))
 
 	return out.String()
 }
 
-type Sources map[int]Source
+type SourceMap map[int]Source
 
-func (s Sources) String() string {
+func (s SourceMap) String() string {
 	ids := make([]int, 0)
 	for id := range s {
 		ids = append(ids, id)

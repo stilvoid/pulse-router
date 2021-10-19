@@ -1,4 +1,4 @@
-package main
+package client
 
 import (
 	"fmt"
@@ -25,9 +25,9 @@ func (s Module) String() string {
 	return out.String()
 }
 
-type Modules map[int]Module
+type ModuleMap map[int]Module
 
-func (s Modules) String() string {
+func (s ModuleMap) String() string {
 	ids := make([]int, 0)
 	for id := range s {
 		ids = append(ids, id)
